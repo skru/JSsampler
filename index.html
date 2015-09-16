@@ -1,0 +1,46 @@
+<html>
+	<head>
+
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>JS sampler</title>
+		<style>
+		#scrub {
+			width: 100%;
+			margin: 0 auto;
+		}
+		#canvas-wrapper {
+			height: 100px;
+		}
+		</style>
+
+	</head>
+	<body>
+	<h1> JS Sampler </h1>
+		<div id='canvas-wrapper'>
+	        <div id='wave'></div>
+	    </div>
+
+    	<div id='scrub-box' style='width: 100%:'>
+	        <input class='slide' id='scrub' type="range" min="0" max="0.99" step="0.001" value="0">
+	    </div>
+
+	    <div id='record' data-bind='click: record'>record</div>
+	    <div id='recording'>recording</div>
+<!-- 	    <div id='stopdub'>stopdub</div> -->
+	    <div id='stop'>stop</div>
+<!-- 	    <div id='pause'>pause</div> -->
+	    <label id='loop-label' for='looper'>loop</label>
+        <input type="checkbox" id='looper'>
+
+        <label id='mic-label' for='mic'>mic</label>
+        <input type="checkbox" id='mic'>
+        
+        <label id='pitch-label' for='pitch'><div id='pitch-text'>pitch</div></label>
+		<div id='pitch-slide'><input class='slide' id='pitch' type="range" min="0.01" max="3" step="0.05" value="1"></div>
+		<script src='js/jquery-2.1.4.min.js'></script>
+		<script src="js/recorder.js"></script>
+		<script src='js/wavesurfer.js'></script>
+		<script src="js/tuna.js"></script>
+		<script src='js/main.js'></script>
+	</body>
+</html>
