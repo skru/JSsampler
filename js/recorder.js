@@ -4,7 +4,9 @@
 
   var Recorder = function(source, cfg){
     var config = cfg || {};
-    var bufferLen = 2048;
+    //var bufferLen = 2048;
+    var bufferLen = config.bufferLen;
+
     this.context = source.context;
     this.node = (this.context.createScriptProcessor ||
                  this.context.createJavaScriptNode).call(this.context,

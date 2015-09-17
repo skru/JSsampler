@@ -3,6 +3,7 @@
         return  window.AudioContext || window.mozAudioContext;
     })();
     var audioContext = new AudioContext();
+    var tuna = new Tuna(audioContext);
     var wavesurfer = Object.create(WaveSurfer);
     var wavesurfHeight = document.getElementById('canvas-wrapper').offsetHeight;
     var wavesurfer_options = {
@@ -31,7 +32,8 @@
     var recordVolume = audioContext.createGain();
     recordVolume.gain.value = 1;
 
-    
+    var start = 0;
+    var finish = 1;
 
 
 
@@ -42,66 +44,55 @@
 
 ///////////////////////////////////////////////////////////
 ///////////// DELAY ///////////////////////////////////////
-    var delay_time = document.getElementById('dub-time');
-    var delay_feedback = document.getElementById('dub-feedback');
-    var delay_filter = document.getElementById('dub-filter');
-    var delay_mix = document.getElementById('dub-mix');
-    var delay_mixwet = document.getElementById('dub-mixwet');
-    //console.log(delay_feedback.value)
-    var tuna = new Tuna(audioContext);
-    var delay = new tuna.Delay({
-        feedback: delay_feedback.value,    //0 to 1+
-        delayTime: delay_time.value,    //how many milliseconds should the wet signal be delayed?
-        wetLevel: delay_mixwet.value,    //0 to 1+
-        dryLevel: delay_mix.value,       //0 to 1+
-        cutoff: delay_filter.value,        //cutoff frequency of the built in highpass-filter. 20 to 22050
-        bypass: 0
+    var delayfeedback = $('#dub-feedback');
+    var delaytime = $('#dub-time');
+    var delaywet = $('#dub-mixwet');
+    var delaydry = $('#dub-mix');
+    var delaycutoff = $('#dub-filter');
+    var delay = new tuna.Delay();
+    delay.feedback.value = delayfeedback.val();
+    delay.delayTime.value = delaytime.val();
+    delay.wetLevel.value = delaywet.val();
+    delay.dryLevel.value = delaydry.val();
+    delay.cutoff.value = delaycutoff.val();
+    delaytime.on('input', function (e) {
+        e.preventDefault();
+        delay.delayTime.value = delaytime.val();
     });
-    var dub_delay = document.getElementById('dub-delay');
-    delay.delayTime.value = delay_time.value;
-    delay.feedback.value = delay_feedback.value;
-    delay.cutoff.value = delay_filter.value;
-    delay.dryLevel.value = delay_mix.value;
-    delay.wetLevel.value = delay_mixwet.value;
-
-
-
-    
-
-    delay_time.addEventListener('input', function () {
-        delay.delayTime.value = delay_time.value;
-    }, true);
-    delay_feedback.addEventListener('input', function () {
-        delay.feedback.value = delay_feedback.value;
-    }, true);
-    delay_filter.addEventListener('input', function () {
-        delay.cutoff.value = delay_filter.value;
-    }, true);
-    delay_mix.addEventListener('input', function () {
-        delay.dryLevel.value = delay_mix.value;
-        //console.log("mix")
-    }, true);
-    delay_mixwet.addEventListener('input', function () {
-        delay.wetLevel.value = delay_mixwet.value;
-        //console.log("mix")
-    }, true);
+    delayfeedback.on('input', function (e) {
+        e.preventDefault();
+        delay.feedback.value = delayfeedback.val();
+    });
+    delaycutoff.on('input', function (e) {
+        e.preventDefault();
+        delay.cutoff.value = delaycutoff.val();
+    });
+    delaydry.on('input', function (e) {
+        e.preventDefault();
+        delay.dryLevel.value = delaydry.val();
+    });
+    delaywet.on('input', function (e) {
+        e.preventDefault();
+        delay.wetLevel.value = delaywet.val();
+    });
 ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
     $("#wave").click(function (e) {
         e.preventDefault();
         if (playing) {
-            wavesurfer.seekTo(scrub.val());
-            wavesurfer.play();
+            wavesurfer.seekTo(start);
+            wavesurfer.play(start * wavesurfer.getDuration(),finish * wavesurfer.getDuration());
         }
-        wavesurfer.play();
+        wavesurfer.play(start * wavesurfer.getDuration(), finish * wavesurfer.getDuration());
         playing = true;
     });
 
     $("#stop").click(function (e) {
         e.preventDefault();
         wavesurfer.stop()
-        wavesurfer.seekTo(scrub.val());
+        wavesurfer.seekTo(start);
+        playing = false;
     });
 
     var volume = $('#volume');
@@ -118,12 +109,12 @@
         wavesurfer.setPlaybackRate(pitch.val());
     });
 
-    var scrub = $('#scrub');
-    scrub.val(0);
-    scrub.on('input', function (e) {
-        e.preventDefault();
-        wavesurfer.seekTo(scrub.val());
-    });
+    // var scrub = $('#scrub');
+    // scrub.val(0);
+    // scrub.on('input', function (e) {
+    //     e.preventDefault();
+    //     wavesurfer.seekTo(scrub.val());
+    // });
 
     $("div#record").click(function (e) {
         e.preventDefault();
@@ -145,19 +136,25 @@
 
     $('#looper').prop('checked', false);
 
+
+
+
     $('#looper:checkbox').change(function (e) {
         e.preventDefault();
         if (looper.is(':checked') === false) {
+
+
             wavesurfer.on('finish', function () {
                 wavesurfer.stop();
-                wavesurfer.seekTo(scrub.val());
+                wavesurfer.seekTo(start * wavesurfer.getDuration());
                 playing = false;
             }); 
         } else {
+
             wavesurfer.on('finish', function () {
+
                 wavesurfer.stop();
-                wavesurfer.seekTo(scrub.val());
-                wavesurfer.play()
+                wavesurfer.play(start * wavesurfer.getDuration(), finish * wavesurfer.getDuration());
             });
         }
     });
@@ -194,6 +191,22 @@
         };
     });
 
+    $( "#slider-range" ).slider({
+        range: true,
+        min: 0,
+        max: 1000,
+        values: [ 0, 1000 ],
+        slide: function( event, ui ) {
+            start = ui.values[0] / 1000.0;
+            finish = ui.values[1] / 1000.0;
+            console.log(playing)
+            if (!playing) {
+                wavesurfer.seekTo(start);
+            }
+        }
+    });
+
+
     var startRecorder = function (recorder) {
         recorder.clear();
         recorder.record();
@@ -207,21 +220,18 @@
         recorder.stop();
         if (initial === true) {
             mediaStreamSource.disconnect(recordVolume);
-
             wavesurfer.init(wavesurfer_options);
-            wavesurfer.backend.setFilter(masterMerger); 
-            wavesurfer.setVolume(0); 
-            masterVolume.gain.value = 5; //maintains equal volume when recording?
-            volume.val(5); 
-            volume.show();
-            console.log(recorder.source) 
-            //recorder.source = outputMixer;
-            console.log(recorder.source)
 
+            wavesurfer.backend.setFilter(masterMerger); 
             masterMerger.connect(splitter);
             splitter.connect(masterVolume);
             masterVolume.connect(audioContext.destination);
             splitter.connect(recordVolume);
+
+            wavesurfer.setVolume(0); //mutes ac.destination
+            masterVolume.gain.value = 5; //maintains equal volume when recording?
+            volume.val(5); 
+            volume.show();
         } 
         initial = false;
         recorder.exportWAV(function (e) {
@@ -232,7 +242,7 @@
         //console.log($('#mic').val())
         wavesurfer.setPlaybackRate(1);
         wavesurfer.seekTo(0);
-        scrub.val(0);
+        //scrub.val(0);
     };
 
 
@@ -242,7 +252,8 @@
         mediaStreamSource = audioContext.createMediaStreamSource(stream);
         mediaStreamSource.connect(recordVolume);
         recorder = new Recorder(recordVolume, {
-            workerPath: "js/recorderWorker.js"
+            workerPath: "js/recorderWorker.js",
+            bufferLen: 4096
         });
     };
 

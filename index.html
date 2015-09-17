@@ -3,7 +3,10 @@
 
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>JS sampler</title>
+		<link href='css/jquery-ui.min.css' rel="stylesheet">
+'
 		<style>
+
 		#scrub {
 			width: 100%;
 			margin: 0 auto;
@@ -19,6 +22,9 @@
 		<div id='canvas-wrapper'>
 	        <div id='wave'></div>
 	    </div>
+	    <p>
+	
+	<div id="slider-range"></div>
 
     	<div id='scrub-box' style='width: 100%:'>
 	        <input class='slide' id='scrub' type="range" min="0" max="0.99" step="0.001" value="0">
@@ -49,11 +55,11 @@
 	    <div id='delay-box'>
                 <div id='delay-time-slide'>
                     <label id='dub-time-label' for='dub-time'>delay time</label>
-                    <input class='slide' id='dub-time' type="range" min="0.01" max="1" step="0.01" value="0.4">
+                    <input class='slide' id='dub-time' type="range" min="0.01" max="1" step="0.01" value="0.2">
                 </div>
                 <div id='delay-feedback-slide'>
                     <label id='dub-feedback-label' for='dub-feedback'>feedback</label>
-                    <input class='slide' id='dub-feedback' type="range" min="0" max="1" step="0.01" value="0.6">
+                    <input class='slide' id='dub-feedback' type="range" min="0" max="1" step="0.001" value="0.6">
                 </div>
                 <div id='delay-filter-slide'>
                     <label id='dub-filter-label' for='dub-filter'>filter</label>
@@ -71,8 +77,20 @@
 
 
 		<script src='js/jquery-2.1.4.min.js'></script>
+		<script src="js/jquery-ui.slider.js"></script>
 		<script src="js/recorder.js"></script>
-		<script src='js/wavesurfer.js'></script>
+
+		<script src='js/src/wavesurfer.js'></script>
+		<script src='js/src/util.js'></script>
+		<script src='js/src/webaudio.js'></script>
+		<script src='js/src/mediaelement.js'></script>
+		<script src='js/src/drawer.js'></script>
+		<script src='js/src/drawer.canvas.js'></script>
+		
+		
+		
+		
+		<!--<script src='js/wavesurfer.min.js'></script>-->
 		<script src="js/tuna.js"></script>
 		<script src='js/main.js'></script>
 	</body>
