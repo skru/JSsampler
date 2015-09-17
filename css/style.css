@@ -1,0 +1,101 @@
+body {
+        font: 13.3333px Arial;
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+}
+#scrub {
+			width: 100%;
+			margin: 0 auto;
+		}
+		#canvas-wrapper {
+			height: 100px;
+		}
+		#eq > span {
+		    height:120px; float:left; margin:20px
+		  }
+		.ui-slider-pip-label {
+			bottom: 20% !important;
+		}
+		#eq  .ui-slider-label {
+
+			/* Safari */
+			-webkit-transform: rotate(-90deg);
+
+			/* Firefox */
+			-moz-transform: rotate(-90deg);
+
+			/* IE */
+			-ms-transform: rotate(-90deg);
+
+			/* Opera */
+			-o-transform: rotate(-90deg);
+
+			/* Internet Explorer */
+			filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+
+			
+		}
+		/*volume*/
+		.ui-slider-pips .ui-slider-label {
+		    position: absolute;
+		    top: 8px;
+		    left: 100%;
+		    margin-left: -1em;
+		    width: 2em;
+		}
+
+.ui-slider-vertical.ui-slider-pips .ui-slider-pip {
+    text-align: left;
+    top: auto;
+    left: 14px;
+    margin-left: 0;
+    margin-bottom: -0.5em;
+}
+/* toggle btn */
+div label input {
+   /*margin-right:100px;*/
+}
+
+
+.ck-button {
+ 	margin: 4px;
+    background-color: #EFEFEF;
+    border-radius: 4px;
+    border: 1px solid #D0D0D0;
+    overflow: auto;
+    float: left;
+    padding: 7px;
+}
+
+
+
+.ck-button label {
+    float:left;
+    width:4.0em;
+}
+
+.ck-button label span {
+    text-align:center;
+/*    padding:3px 0px;*/
+    display:block;
+
+}
+
+.ck-button label input {
+    position:absolute;
+    top:-20px;
+}
+
+.ck-button input:checked + span, .ck-button input:checked + button  {
+    background-color:#911;
+    color:#fff;
+}
+.btnstyle {
+	    padding-left: 0;
+    padding-right: 0;
+}

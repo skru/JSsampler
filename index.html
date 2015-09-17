@@ -4,82 +4,79 @@
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<title>JS sampler</title>
 		<link href='css/jquery-ui.min.css' rel="stylesheet">
-'
-		<style>
-
-		#scrub {
-			width: 100%;
-			margin: 0 auto;
-		}
-		#canvas-wrapper {
-			height: 100px;
-		}
-		</style>
+		<link href='css/jquery-ui-slider-pips.css' rel="stylesheet">
+		<link href='css/style.css' rel="stylesheet">
 
 	</head>
 	<body>
-	<h1> JS Sampler </h1>
 		<div id='canvas-wrapper'>
 	        <div id='wave'></div>
 	    </div>
-	    <p>
 	
-	<div id="slider-range"></div>
+		<div id="slider-range"></div>
+		<br>
+		<div id="slider-volume"></div>
+		<br>
+	    <div id="slider-pitch"></div>
+		<br>
 
-    	<div id='scrub-box' style='width: 100%:'>
-	        <input class='slide' id='scrub' type="range" min="0" max="0.99" step="0.001" value="0">
-	    </div>
+		<button class="ck-button" id='record'>RECORD</button>
+		<button class="ck-button" id='recording'>STOPREC</button>
+		<button class="ck-button" id='stop'>STOP</button>
+		<div class="ck-button btnstyle">
+		   <label>
+		      <input type="checkbox" value="0" id='looper'><span>LOOP</span>
+		   </label>
+		</div>
+		<div class="ck-button btnstyle">
+		   <label>
+		      <input type="checkbox" value="1" id='mic'><span>MIC</span>
+		   </label>
+		</div>
+		<div class="ck-button btnstyle">
+		   <label>
+		      <input type="checkbox" value="1" id='micMute'><span>M/Mute</span>
+		   </label>
+		</div>
 
-	    <div id='record' data-bind='click: record'>record</div>
-	    <div id='recording'>recording</div>
-<!-- 	    <div id='stopdub'>stopdub</div> -->
-	    <div id='stop'>stop</div>
-<!-- 	    <div id='pause'>pause</div> -->
+<!-- 
 	    <label id='loop-label' for='looper'>loop</label>
-        <input type="checkbox" id='looper'>
+        <input type="checkbox" id='looper'> -->
 
-        <label id='mic-label' for='mic'>mic</label>
+<!--         <label id='mic-label' for='mic'>mic</label>
         <input type="checkbox" id='mic'>
 
         <label id='micMute-label' for='micMute'>mute on mic</label>
-        <input type="checkbox" id='micMute'>
+        <input type="checkbox" id='micMute'> -->
         <br>
-        <label id='volume-label' for='volume'>volume</label>
-		<input id='volume' type="range" min="0" max="5" step="0.001" value="0">
+ <!--        <label id='volume-label' for='volume'>volume</label>
+		<input id='volume' type="range" min="0" max="5" step="0.001" value="0"> -->
+        
         <br>
-        <label id='pitch-label' for='pitch'>pitch</label>
-	    <input class='slide' id='pitch' type="range" min="0.01" max="3" step="0.05" value="1">
-	    <br>
-	    <label id='delay-label' for='delay'>delay</label>
+<!--         <label id='pitch-label' for='pitch'>pitch</label>
+	    <input class='slide' id='pitch' type="range" min="0.01" max="3" step="0.05" value="1"> -->
+
+	    <div style='float:left;'>
+	    	<label id='delay-label' for='delay'>delay</label>
         <input type="checkbox" id='delay'>
-	    <div id='delay-box'>
-                <div id='delay-time-slide'>
-                    <label id='dub-time-label' for='dub-time'>delay time</label>
-                    <input class='slide' id='dub-time' type="range" min="0.01" max="1" step="0.01" value="0.2">
-                </div>
-                <div id='delay-feedback-slide'>
-                    <label id='dub-feedback-label' for='dub-feedback'>feedback</label>
-                    <input class='slide' id='dub-feedback' type="range" min="0" max="1" step="0.001" value="0.6">
-                </div>
-                <div id='delay-filter-slide'>
-                    <label id='dub-filter-label' for='dub-filter'>filter</label>
-                    <input class='slide' id='dub-filter' type="range" min="20" max="22050" step="100" value="22050">
-                </div>
-                <div id='delay-dry-slide'>
-                    <label id='dub-mix-label' for='dub-mix'>dry</label>
-                    <input class='slide' id='dub-mix' type="range" min="0" max="1" step="0.01" value="0.9">
-                </div>
-                <div id='delay-wet-slide'>
-                    <label id='dub-mixwet-label' for='dub-mixwet'>wet</label>
-                    <input class='slide' id='dub-mixwet' type="range" min="0" max="1" step="0.01" value="0.9">
-                </div>
-            </div>
+
+
+            <div id="eq">
+			  <span id='delay-time'></span>
+			  <span id='delay-feed'></span>
+			  <span id='delay-cutoff'></span>
+			  <span id='delay-wet'></span>
+			  <span id='delay-dry'></span>
+			</div>
+		</div>
 
 
 		<script src='js/jquery-2.1.4.min.js'></script>
-		<script src="js/jquery-ui.slider.js"></script>
-		<script src="js/recorder.js"></script>
+		<script src="js/jquery-ui.min.js"></script>
+		<script src="js/jquery-ui-slider-pips.js"></script>
 
+
+		<script src="js/recorder.js"></script>
 		<script src='js/src/wavesurfer.js'></script>
 		<script src='js/src/util.js'></script>
 		<script src='js/src/webaudio.js'></script>

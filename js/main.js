@@ -8,9 +8,9 @@
     var wavesurfHeight = document.getElementById('canvas-wrapper').offsetHeight;
     var wavesurfer_options = {
         container: document.querySelector('#wave'),
-        waveColor: 'red',
+        waveColor: '#f6a828',
         progressColor: 'white',
-        cursorColor: 'red',
+        cursorColor: '#f6a828',
         cursorWidth: '5',
         hideScrollbar: true,
         normalize: false,
@@ -44,37 +44,75 @@
 
 ///////////////////////////////////////////////////////////
 ///////////// DELAY ///////////////////////////////////////
-    var delayfeedback = $('#dub-feedback');
-    var delaytime = $('#dub-time');
-    var delaywet = $('#dub-mixwet');
-    var delaydry = $('#dub-mix');
-    var delaycutoff = $('#dub-filter');
+    var de = ['killer']
     var delay = new tuna.Delay();
-    delay.feedback.value = delayfeedback.val();
-    delay.delayTime.value = delaytime.val();
-    delay.wetLevel.value = delaywet.val();
-    delay.dryLevel.value = delaydry.val();
-    delay.cutoff.value = delaycutoff.val();
-    delaytime.on('input', function (e) {
-        e.preventDefault();
-        delay.delayTime.value = delaytime.val();
+    $('#delay-time').slider({
+        value: 20,
+        range: "min",
+        animate: true,
+        orientation: "vertical",
+        slide: function( event, ui ) {
+            delay.delayTime.value = ui.value/100;
+        }
+
+    }).slider("pips", {
+        labels: ['Time'],
+        step: 20
     });
-    delayfeedback.on('input', function (e) {
-        e.preventDefault();
-        delay.feedback.value = delayfeedback.val();
+
+    $('#delay-feed').slider({
+        value: 50,
+        range: "min",
+        animate: true,
+        orientation: "vertical",
+        slide: function( event, ui ) {
+            delay.feedback.value = ui.value/100;
+        }
+    }).slider("pips", {
+        labels: ['Feedback'],
+        step: 20
     });
-    delaycutoff.on('input', function (e) {
-        e.preventDefault();
-        delay.cutoff.value = delaycutoff.val();
+    $('#delay-cutoff').slider({
+        value: 100,
+        range: "min",
+        animate: true,
+        orientation: "vertical",
+        slide: function( event, ui ) {
+            delay.cutoff.value = (ui.value/100) * 22050;
+        }
+    }).slider("pips", {
+        labels: ['Cutoff'],
+        step: 20
     });
-    delaydry.on('input', function (e) {
-        e.preventDefault();
-        delay.dryLevel.value = delaydry.val();
+    $('#delay-wet').slider({
+        value: 100,
+        range: "min",
+        animate: true,
+        orientation: "vertical",
+        slide: function( event, ui ) {
+            delay.wetLevel.value = ui.value/100;
+        }
+    }).slider("pips", {
+        labels: ['Wet'],
+        step: 20
     });
-    delaywet.on('input', function (e) {
-        e.preventDefault();
-        delay.wetLevel.value = delaywet.val();
+    $('#delay-dry').slider({
+        value: 100,
+        range: "min",
+        animate: true,
+        orientation: "vertical",
+        slide: function( event, ui ) {
+            delay.dryLevel.value = ui.value/100;
+        }
+    }).slider("pips", {
+        labels: ['Dry'],
+        step: 20
     });
+    delay.feedback.value = $('#delay-time').slider( "option", "value" )/100;
+    delay.delayTime.value = $('#delay-feed').slider( "option", "value" )/100;
+    delay.cutoff.value = ($('#delay-cutoff').slider( "option", "value" )/100) * 22050;
+    delay.dryLevel.value = $('#delay-wet').slider( "option", "value" )/100;
+    delay.wetLevel.value = $('#delay-dry').slider( "option", "value" )/100;
 ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
 
@@ -82,9 +120,9 @@
         e.preventDefault();
         if (playing) {
             wavesurfer.seekTo(start);
-            wavesurfer.play(start * wavesurfer.getDuration(),finish * wavesurfer.getDuration());
+            wavesurfer.play(start,finish * wavesurfer.getDuration());
         }
-        wavesurfer.play(start * wavesurfer.getDuration(), finish * wavesurfer.getDuration());
+        wavesurfer.play(start, finish * wavesurfer.getDuration());
         playing = true;
     });
 
@@ -95,66 +133,77 @@
         playing = false;
     });
 
-    var volume = $('#volume');
-    volume.hide(); 
-    volume.on('input', function (e) {
-        e.preventDefault();
-        masterVolume.gain.value = volume.val();
-        ////
-    });
-
-    var pitch = $('#pitch');
-    pitch.on('input', function (e) {
-        e.preventDefault();
-        wavesurfer.setPlaybackRate(pitch.val());
-    });
-
-    // var scrub = $('#scrub');
-    // scrub.val(0);
-    // scrub.on('input', function (e) {
+    // var volume = $('#volume');
+    // volume.hide(); 
+    // volume.on('input', function (e) {
     //     e.preventDefault();
-    //     wavesurfer.seekTo(scrub.val());
+    //     masterVolume.gain.value = volume.val();
+    //     ////
     // });
 
-    $("div#record").click(function (e) {
+    $('#slider-volume').slider({
+        value: 100,
+        min: 0,
+        max: 120,
+        step: 0.1,
+        range: "min",
+        animate: true,
+        slide: function( event, ui ) {
+            masterVolume.gain.value = ui.value/100;
+        }
+
+    }).slider("pips", {
+        labels: ['Volume'],
+        step: 100
+    });
+
+    $('#slider-pitch').slider({
+        value: 1,
+        min: 0,
+        max: 2,
+        step: 0.01,
+        range: "min",
+        animate: true,
+        slide: function( event, ui ) {
+            wavesurfer.setPlaybackRate(ui.value);
+        }
+
+    }).slider("pips", {
+        labels: ['Pitch'],
+        step: 100
+    });
+
+    $("#record").click(function (e) {
         e.preventDefault();
         recording = true;
         startRecorder(recorder);
-        $("div#record").hide();
+        $("#record").hide();
         $('#recording').show();
     });
 
-    $('div#recording').hide();
-    $('div#recording').click(function (e) {
+    $('#recording').hide();
+    $('#recording').click(function (e) {
         e.preventDefault();
         stopRecorder(recorder);
         recording = false;
-        $('div#recording').hide();
-        $("div#record").show();
+        $('#recording').hide();
+        $("#record").show();
 
     });
-
+    
     $('#looper').prop('checked', false);
-
-
-
-
     $('#looper:checkbox').change(function (e) {
         e.preventDefault();
         if (looper.is(':checked') === false) {
-
-
             wavesurfer.on('finish', function () {
                 wavesurfer.stop();
-                wavesurfer.seekTo(start * wavesurfer.getDuration());
+                wavesurfer.seekTo(start);
                 playing = false;
             }); 
         } else {
-
             wavesurfer.on('finish', function () {
-
                 wavesurfer.stop();
-                wavesurfer.play(start * wavesurfer.getDuration(), finish * wavesurfer.getDuration());
+                wavesurfer.play(start, finish * wavesurfer.getDuration());
             });
         }
     });
@@ -195,17 +244,27 @@
         range: true,
         min: 0,
         max: 1000,
+        animate: true,
         values: [ 0, 1000 ],
         slide: function( event, ui ) {
-            start = ui.values[0] / 1000.0;
-            finish = ui.values[1] / 1000.0;
-            console.log(playing)
+            start = (ui.values[0] / 1000.0) * wavesurfer.getDuration();
+            finish = (ui.values[1] / 1000.0);
             if (!playing) {
                 wavesurfer.seekTo(start);
             }
         }
+    }).slider("pips", {
+        labels: ['Loop'],
+        step: 100
     });
 
+    $( "#record-btn" ).button({
+      icons: {
+        primary: "ui-icon-locked"
+      },
+      text: false
+    });
+    $( "#check" ).button();
 
     var startRecorder = function (recorder) {
         recorder.clear();
@@ -230,16 +289,14 @@
 
             wavesurfer.setVolume(0); //mutes ac.destination
             masterVolume.gain.value = 5; //maintains equal volume when recording?
-            volume.val(5); 
-            volume.show();
+            // volume.val(5); 
+            // volume.show();
         } 
         initial = false;
         recorder.exportWAV(function (e) {
             wavesurfer.loadBlob(e);
         });
-        //console.log($('#mic').val())
         $('#mic').prop('checked', false);
-        //console.log($('#mic').val())
         wavesurfer.setPlaybackRate(1);
         wavesurfer.seekTo(0);
         //scrub.val(0);
