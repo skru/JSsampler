@@ -34,9 +34,42 @@
 
         <label id='mic-label' for='mic'>mic</label>
         <input type="checkbox" id='mic'>
-        
-        <label id='pitch-label' for='pitch'><div id='pitch-text'>pitch</div></label>
-		<div id='pitch-slide'><input class='slide' id='pitch' type="range" min="0.01" max="3" step="0.05" value="1"></div>
+
+        <label id='micMute-label' for='micMute'>mute on mic</label>
+        <input type="checkbox" id='micMute'>
+        <br>
+        <label id='volume-label' for='volume'>volume</label>
+		<input id='volume' type="range" min="0" max="5" step="0.001" value="0">
+        <br>
+        <label id='pitch-label' for='pitch'>pitch</label>
+	    <input class='slide' id='pitch' type="range" min="0.01" max="3" step="0.05" value="1">
+	    <br>
+	    <label id='delay-label' for='delay'>delay</label>
+        <input type="checkbox" id='delay'>
+	    <div id='delay-box'>
+                <div id='delay-time-slide'>
+                    <label id='dub-time-label' for='dub-time'>delay time</label>
+                    <input class='slide' id='dub-time' type="range" min="0.01" max="1" step="0.01" value="0.4">
+                </div>
+                <div id='delay-feedback-slide'>
+                    <label id='dub-feedback-label' for='dub-feedback'>feedback</label>
+                    <input class='slide' id='dub-feedback' type="range" min="0" max="1" step="0.01" value="0.6">
+                </div>
+                <div id='delay-filter-slide'>
+                    <label id='dub-filter-label' for='dub-filter'>filter</label>
+                    <input class='slide' id='dub-filter' type="range" min="20" max="22050" step="100" value="22050">
+                </div>
+                <div id='delay-dry-slide'>
+                    <label id='dub-mix-label' for='dub-mix'>dry</label>
+                    <input class='slide' id='dub-mix' type="range" min="0" max="1" step="0.01" value="0.9">
+                </div>
+                <div id='delay-wet-slide'>
+                    <label id='dub-mixwet-label' for='dub-mixwet'>wet</label>
+                    <input class='slide' id='dub-mixwet' type="range" min="0" max="1" step="0.01" value="0.9">
+                </div>
+            </div>
+
+
 		<script src='js/jquery-2.1.4.min.js'></script>
 		<script src="js/recorder.js"></script>
 		<script src='js/wavesurfer.js'></script>
