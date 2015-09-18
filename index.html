@@ -9,10 +9,14 @@
 
 	</head>
 	<body>
+		<div id='loading-screen' style='display:none;'><h1>loading: </h1></div>
+	    
+
 		<div id='canvas-wrapper'>
 	        <div id='wave'></div>
 	    </div>
-	
+
+		<br>
 		<div id="slider-range"></div>
 		<br>
 		<div id="slider-volume"></div>
@@ -23,42 +27,41 @@
 		<button class="ck-button" id='record'>RECORD</button>
 		<button class="ck-button" id='recording'>STOPREC</button>
 		<button class="ck-button" id='stop'>STOP</button>
-		<div class="ck-button btnstyle">
+		<div class="ck-button btnstyle" id='looperbtn'>
 		   <label>
 		      <input type="checkbox" value="0" id='looper'><span>LOOP</span>
 		   </label>
 		</div>
-		<div class="ck-button btnstyle">
+		
+		
+		
+		<div class="ck-button btnstyle" id='micbtn'>
 		   <label>
-		      <input type="checkbox" value="1" id='mic'><span>MIC</span>
+		      <input type="checkbox" id='mic'><span>MIC</span>
 		   </label>
 		</div>
-		<div class="ck-button btnstyle">
+		<div class="ck-button btnstyle" id='micMutebtn'>
 		   <label>
-		      <input type="checkbox" value="1" id='micMute'><span>M/Mute</span>
+		      <input type="checkbox" id='micMute'><span>M/Mute</span>
 		   </label>
 		</div>
 
-<!-- 
-	    <label id='loop-label' for='looper'>loop</label>
-        <input type="checkbox" id='looper'> -->
+		<button class="ck-button" id='save'>SAVE</button>
+		
+		<label class="ck-button loadlabel">
+	    <input type="file" id="load"/>
+		<span>LOAD</span>
+		</label>
 
-<!--         <label id='mic-label' for='mic'>mic</label>
-        <input type="checkbox" id='mic'>
-
-        <label id='micMute-label' for='micMute'>mute on mic</label>
-        <input type="checkbox" id='micMute'> -->
-        <br>
- <!--        <label id='volume-label' for='volume'>volume</label>
-		<input id='volume' type="range" min="0" max="5" step="0.001" value="0"> -->
-        
-        <br>
-<!--         <label id='pitch-label' for='pitch'>pitch</label>
-	    <input class='slide' id='pitch' type="range" min="0.01" max="3" step="0.05" value="1"> -->
+		<button class="ck-button" id='clear'>CLEAR</button>
 
 	    <div style='float:left;'>
-	    	<label id='delay-label' for='delay'>delay</label>
-        <input type="checkbox" id='delay'>
+	    <div class="ck-button btnstyle" id='delaybtn'>
+		   <label>
+		      <input type="checkbox" id='delay'><span>DELAY</span>
+		   </label>
+		</div>
+	    	
 
 
             <div id="eq">

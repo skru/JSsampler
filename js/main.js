@@ -16,11 +16,12 @@
         normalize: false,
         audioContext: audioContext,
         interact: false,
-        height: (wavesurfHeight)
+        height: (100)
     }
     var looper = $('#looper');
     var mic = $('#mic');
     var micMute = $('#micMute');
+    var micOn = true;
 
     var masterMerger = audioContext.createChannelMerger(2);
     var mediaStreamSource;
@@ -97,7 +98,7 @@
         step: 20
     });
     $('#delay-dry').slider({
-        value: 100,
+        value: 50,
         range: "min",
         animate: true,
         orientation: "vertical",
@@ -115,7 +116,7 @@
     delay.wetLevel.value = $('#delay-dry').slider( "option", "value" )/100;
 ////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
-
+////PLAY
     $("#wave").click(function (e) {
         e.preventDefault();
         if (playing) {
@@ -123,24 +124,21 @@
             wavesurfer.play(start,finish * wavesurfer.getDuration());
         }
         wavesurfer.play(start, finish * wavesurfer.getDuration());
+        wavesurfer.on('finish', function () {
+                wavesurfer.stop();
+                wavesurfer.seekTo(start);
+                playing = false;
+            });
         playing = true;
     });
-
+////STOP
     $("#stop").click(function (e) {
         e.preventDefault();
         wavesurfer.stop()
         wavesurfer.seekTo(start);
         playing = false;
     });
-
-    // var volume = $('#volume');
-    // volume.hide(); 
-    // volume.on('input', function (e) {
-    //     e.preventDefault();
-    //     masterVolume.gain.value = volume.val();
-    //     ////
-    // });
-
+////VOLUME
     $('#slider-volume').slider({
         value: 100,
         min: 0,
@@ -156,7 +154,7 @@
         labels: ['Volume'],
         step: 100
     });
-
+////PITCH
     $('#slider-pitch').slider({
         value: 1,
         min: 0,
@@ -172,7 +170,7 @@
         labels: ['Pitch'],
         step: 100
     });
-
+////RECORD
     $("#record").click(function (e) {
         e.preventDefault();
         recording = true;
@@ -188,58 +186,121 @@
         recording = false;
         $('#recording').hide();
         $("#record").show();
+        if ($('#mic').is(':checked')) {
+            $('#mic').prop('checked', false).trigger("change");
+            $('#micbtn').css('background-color','#EFEFEF');
+            masterVolume.gain.value = $('#slider-volume').slider( "option", "value" )/100; 
+            $('#slider-volume').slider({ disabled: false });
+        } else {
+
+        }
+        
 
     });
-    
-    $('#looper').prop('checked', false);
+////LOOP BUTTON
+    looper.prop('checked', false);
     $('#looper:checkbox').change(function (e) {
         e.preventDefault();
-        if (looper.is(':checked') === false) {
+        if (looper.is(':checked')) {
+            wavesurfer.on('finish', function () {
+                wavesurfer.stop();
+                wavesurfer.play(start, finish * wavesurfer.getDuration());
+            }); 
+            $('#looperbtn').css('background-color','#f6a828');
+        } else {
             wavesurfer.on('finish', function () {
                 wavesurfer.stop();
                 wavesurfer.seekTo(start);
                 playing = false;
-            }); 
-        } else {
-            wavesurfer.on('finish', function () {
-                wavesurfer.stop();
-                wavesurfer.play(start, finish * wavesurfer.getDuration());
             });
+            $('#looperbtn').css('background-color','#EFEFEF');
         }
     });
-
-    $('#mic').prop('checked', true);
-    $('#mic:checkbox').change(function (e) {
+////MICROPHONE
+    mic.prop('checked', true);
+    $('#micbtn').css('background-color','#f6a828');
+    mic.change(function (e) {
         e.preventDefault();
-        if (mic.is(':checked') === false) {
-            mediaStreamSource.disconnect(masterMerger);
+        if (mic.is(':checked')) {
+            mediaStreamSource.connect(masterMerger);
+            $('#micbtn').css('background-color','#f6a828');
             if (micMute.is(':checked')) {
-                masterVolume.gain.value = 5; 
-                volume.val(5); 
+                masterVolume.gain.value = 0;
+                 $('#slider-volume').slider({ disabled: true });
             };
         } else {
-            mediaStreamSource.connect(masterMerger);
-             if (micMute.is(':checked')) {
-                masterVolume.gain.value = 0; 
-                volume.val(0); 
+            mediaStreamSource.disconnect(masterMerger);
+            $('#micbtn').css('background-color','#EFEFEF');
+            if (micMute.is(':checked')) {
+                masterVolume.gain.value = $('#slider-volume').slider( "option", "value" )/100; 
+                $('#slider-volume').slider({ disabled: false });
             };
         };
     });
+////MICROPHONE MUTE ON RECORD
+    $('#micMute').prop('checked', true); 
+    $('#micMutebtn').css('background-color','#f6a828'); 
+    $('#micMute:checkbox').change(function (e) {
+        e.preventDefault();
+        if ($('#micMute').is(':checked')) {
+            $('#micMutebtn').css('background-color','#f6a828'); 
+        } else {
+            $('#micMutebtn').css('background-color','#EFEFEF'); 
+        };
+    });  
+////CLEAR
+    $("#clear").click(function (e) {
+        e.preventDefault();
+        if (playing) {
+            
+        }
+        wavesurfer.destroy();
+        wavesurfer.init(wavesurfer_options);  
+        wavesurfer.backend.setFilter();
+        initial = true; // initialise for startRecorder
 
+        //mediaStreamSource.disconnect(masterVolume);
+        //mediaStreamSource.connect(recordVolume); // back to initial state
+
+        wavesurfer.backend.setFilter(masterMerger); 
+        //masterMerger.disconnect(splitter);
+        splitter.disconnect(masterVolume);
+        masterVolume.disconnect(audioContext.destination);
+        splitter.disconnect(recordVolume);
+
+        mediaStreamSource.connect(masterMerger);// hack: allows for stopRecord to disconnect
+        mediaStreamSource.connect(recordVolume);
+        wavesurfer.init(wavesurfer_options);
+
+        
+
+        wavesurfer.setVolume(0); //mutes ac.destination
+        masterVolume.gain.value = 5; //maintains equal volume when recording?
+
+        $('#mic').prop('checked', false).trigger("change");
+
+        // wavesurfer.seekTo(0);
+        // wavesurfer.setVolume(0);
+        // masterVolume.gain.value = 5;
+        
+    });
     $('#delay').prop('checked', false);
     $('#delay:checkbox').change(function (e) {
+        console.log('kkk')
         e.preventDefault();
         if ($('#delay').is(':checked')) {
             masterMerger.disconnect(splitter)
             masterMerger.connect(delay.input);
             delay.connect(splitter);
+            $('#delaybtn').css('background-color','#f6a828'); 
         } else {
             delay.disconnect(splitter);
             masterMerger.disconnect(delay.input);
             masterMerger.connect(splitter);
+            $('#delaybtn').css('background-color','#EFEFEF'); 
         };
     });
-
+////LOOP SCRUB
     $( "#slider-range" ).slider({
         range: true,
         min: 0,
@@ -250,7 +311,8 @@
             start = (ui.values[0] / 1000.0) * wavesurfer.getDuration();
             finish = (ui.values[1] / 1000.0);
             if (!playing) {
-                wavesurfer.seekTo(start);
+                console.log(ui.values[0] / 1000.0)
+                wavesurfer.seekTo(ui.values[0] / 1000.0);
             }
         }
     }).slider("pips", {
@@ -258,19 +320,59 @@
         step: 100
     });
 
-    $( "#record-btn" ).button({
-      icons: {
-        primary: "ui-icon-locked"
-      },
-      text: false
-    });
-    $( "#check" ).button();
+//// Load  
+    function renderImage(file) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            // if true does job of 'stopRecord' and inits 
+            if ( $.isEmptyObject(wavesurfer.params) ) { //hack:returns true if wavesurfer not initiated
+                mediaStreamSource.disconnect(recordVolume); // set in onSucces
+                mediaStreamSource.connect(masterMerger);// to allow mic change event
+                $('#mic').prop('checked', false).trigger("change");
+                
+            } else {
+                wavesurfer.destroy(); // clear wavesurfer
+            }
+            wavesurfer.init(wavesurfer_options);         
+            wavesurfer.loadBlob(file); // load file into wavesurfer
+            wavesurfer.backend.setFilter(masterMerger); 
+            wavesurfer.setVolume(0); //mutes ac.destination
+            masterVolume.gain.value = 5; //maintains equal volume when recording?
+            initial = false;
 
+            masterMerger.connect(splitter);
+            splitter.connect(masterVolume);
+            masterVolume.connect(audioContext.destination);
+            splitter.connect(recordVolume);    
+        }
+      reader.readAsDataURL(file);
+
+    }
+//// loading screen
+    wavesurfer.on('loading', function (callback) {
+        $('#canvas-wrapper').css('height','0');// hack: wavesurfer dissapears with .hide()
+        $("#loading-screen").show();
+        $("#loading-screen").append(callback + '%')
+        wavesurfer.on('ready', function (callback) {
+            $("#loading-screen").hide()
+            $('#canvas-wrapper').css('height','100px');
+        });
+    });
+
+    // handle input changes
+    $("#load").change(function() {
+        // grab the first image in the FileList object and pass it to the function
+        renderImage(this.files[0])
+    });
+
+
+
+////////
     var startRecorder = function (recorder) {
         recorder.clear();
         recorder.record();
         if (!initial) {
-            wavesurfer.play();
+            wavesurfer.play(start / wavesurfer.getDuration(),finish);
         }
         playing = true;
     };
@@ -279,6 +381,7 @@
         recorder.stop();
         if (initial === true) {
             mediaStreamSource.disconnect(recordVolume);
+            mediaStreamSource.connect(masterMerger);// hack: allows for stopRecord to disconnect
             wavesurfer.init(wavesurfer_options);
 
             wavesurfer.backend.setFilter(masterMerger); 
@@ -289,19 +392,20 @@
 
             wavesurfer.setVolume(0); //mutes ac.destination
             masterVolume.gain.value = 5; //maintains equal volume when recording?
-            // volume.val(5); 
-            // volume.show();
         } 
         initial = false;
         recorder.exportWAV(function (e) {
             wavesurfer.loadBlob(e);
+            ////SAVE
+            $("#save").click(function () {
+                Recorder.forceDownload(e)
+            })
         });
-        $('#mic').prop('checked', false);
+        //$('#mic').prop('checked', false);
         wavesurfer.setPlaybackRate(1);
         wavesurfer.seekTo(0);
         //scrub.val(0);
     };
-
 
 
     var onSuccess = function (stream) {

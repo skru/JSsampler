@@ -1,5 +1,5 @@
 body {
-        font: 13.3333px Arial;
+    font: 13.3333px Arial;
     text-rendering: auto;
     color: initial;
     letter-spacing: normal;
@@ -8,47 +8,57 @@ body {
     text-indent: 0px;
     text-shadow: none;
 }
+#canvas-wrapper {
+    height: 100px;
+}
+/* laoding screen */ 
+#loading-screen {
+	height: 100px;
+	width: 100%;
+	background: white;
+	color: #f6a828;
+
+}
+
 #scrub {
-			width: 100%;
-			margin: 0 auto;
-		}
-		#canvas-wrapper {
-			height: 100px;
-		}
-		#eq > span {
-		    height:120px; float:left; margin:20px
-		  }
-		.ui-slider-pip-label {
-			bottom: 20% !important;
-		}
-		#eq  .ui-slider-label {
+    width: 100%;
+    margin: 0 auto;
+}
+/* vertical sliders */
+#eq > span {
+    height: 120px;
+    float: left;
+    margin: 20px
+}
+.ui-slider-pip-label {
+    bottom: 20% !important;
+}
+#eq .ui-slider-label {
+    /* Safari */
+    
+    -webkit-transform: rotate(-90deg);
+    /* Firefox */
+    
+    -moz-transform: rotate(-90deg);
+    /* IE */
+    
+    -ms-transform: rotate(-90deg);
+    /* Opera */
+    
+    -o-transform: rotate(-90deg);
+    /* Internet Explorer */
+    
+    filter: progid: DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+/*volume*/
 
-			/* Safari */
-			-webkit-transform: rotate(-90deg);
-
-			/* Firefox */
-			-moz-transform: rotate(-90deg);
-
-			/* IE */
-			-ms-transform: rotate(-90deg);
-
-			/* Opera */
-			-o-transform: rotate(-90deg);
-
-			/* Internet Explorer */
-			filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-
-			
-		}
-		/*volume*/
-		.ui-slider-pips .ui-slider-label {
-		    position: absolute;
-		    top: 8px;
-		    left: 100%;
-		    margin-left: -1em;
-		    width: 2em;
-		}
-
+.ui-slider-pips .ui-slider-label {
+    position: absolute;
+    top: 8px;
+    left: 100%;
+    margin-left: -1em;
+    width: 2em;
+}
 .ui-slider-vertical.ui-slider-pips .ui-slider-pip {
     text-align: left;
     top: auto;
@@ -56,14 +66,15 @@ body {
     margin-left: 0;
     margin-bottom: -0.5em;
 }
-/* toggle btn */
-div label input {
-   /*margin-right:100px;*/
-}
+/* record button */
 
+#record {
+    background: #FF4C4C;
+}
+/* toggle btn */
 
 .ck-button {
- 	margin: 4px;
+    margin: 4px;
     background-color: #EFEFEF;
     border-radius: 4px;
     border: 1px solid #D0D0D0;
@@ -71,31 +82,29 @@ div label input {
     float: left;
     padding: 7px;
 }
-
-
-
 .ck-button label {
-    float:left;
-    width:4.0em;
+    float: left;
+    width: 4.0em;
 }
-
 .ck-button label span {
-    text-align:center;
-/*    padding:3px 0px;*/
-    display:block;
-
+    text-align: center;
+    display: block;
+    height: 23px;
+    padding-top: 7px;
 }
-
 .ck-button label input {
-    position:absolute;
-    top:-20px;
+    position: absolute;
+    top: -20px;
 }
-
-.ck-button input:checked + span, .ck-button input:checked + button  {
-    background-color:#911;
-    color:#fff;
+.ck-button input:checked + .btnstyle {
+    background-color: #911;
+    color: #fff;
 }
 .btnstyle {
-	    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
+}
+/* load button */
+label input[type="file"] {
+    position: fixed;
+    top: -1000px;
 }
