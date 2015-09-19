@@ -40,7 +40,7 @@
 
 
     var initial = true;    //keeps track of initial state
-    var playing;           //keeps track of playing state
+    var playing = false;           //keeps track of playing state
     var recording = false; //keeps track of recording state
 
 ///////////////////////////////////////////////////////////
@@ -122,21 +122,30 @@
         if (playing) {
             wavesurfer.seekTo(start);
             wavesurfer.play(start,finish * wavesurfer.getDuration());
+            wavesurfer.on('finish', function () {
+                wavesurfer.seekTo(start / wavesurfer.getDuration());
+  
+            });
         }
         wavesurfer.play(start, finish * wavesurfer.getDuration());
-        wavesurfer.on('finish', function () {
-                wavesurfer.stop();
-                wavesurfer.seekTo(start);
-                playing = false;
-            });
         playing = true;
     });
+    wavesurfer.on('finish', function () {
+        wavesurfer.stop();
+        wavesurfer.seekTo(start / wavesurfer.getDuration());
+        playing = false;
+
+    });
+    
+
 ////STOP
     $("#stop").click(function (e) {
         e.preventDefault();
-        wavesurfer.stop()
-        wavesurfer.seekTo(start);
-        playing = false;
+        if (playing) {
+            wavesurfer.stop()
+            wavesurfer.seekTo(start / wavesurfer.getDuration());
+            playing = false;
+        } 
     });
 ////VOLUME
     $('#slider-volume').slider({
@@ -173,8 +182,17 @@
 ////RECORD
     $("#record").click(function (e) {
         e.preventDefault();
+        recorder.clear();
+        recorder.record();
+        if (!initial) {
+            console.log(start)
+            wavesurfer.seekTo(start);
+            wavesurfer.play(start,finish  * wavesurfer.getDuration());
+        }
+
+        //playing = true;
         recording = true;
-        startRecorder(recorder);
+        //startRecorder(recorder);
         $("#record").hide();
         $('#recording').show();
     });
@@ -198,22 +216,25 @@
 
     });
 ////LOOP BUTTON
-    looper.prop('checked', false);
+
+    $('#looper').prop('checked', false).trigger("change");
     $('#looper:checkbox').change(function (e) {
         e.preventDefault();
         if (looper.is(':checked')) {
             wavesurfer.on('finish', function () {
                 wavesurfer.stop();
-                wavesurfer.play(start, finish * wavesurfer.getDuration());
+                wavesurfer.play(start, finish * wavesurfer.getDuration()); 
+
             }); 
             $('#looperbtn').css('background-color','#f6a828');
         } else {
             wavesurfer.on('finish', function () {
                 wavesurfer.stop();
-                wavesurfer.seekTo(start);
+                wavesurfer.seekTo(start / wavesurfer.getDuration());
                 playing = false;
-            });
+            }); 
             $('#looperbtn').css('background-color','#EFEFEF');
+
         }
     });
 ////MICROPHONE
@@ -311,7 +332,6 @@
             start = (ui.values[0] / 1000.0) * wavesurfer.getDuration();
             finish = (ui.values[1] / 1000.0);
             if (!playing) {
-                console.log(ui.values[0] / 1000.0)
                 wavesurfer.seekTo(ui.values[0] / 1000.0);
             }
         }
@@ -368,14 +388,7 @@
 
 
 ////////
-    var startRecorder = function (recorder) {
-        recorder.clear();
-        recorder.record();
-        if (!initial) {
-            wavesurfer.play(start / wavesurfer.getDuration(),finish);
-        }
-        playing = true;
-    };
+
     var stopRecorder = function (recorder) {
         playing = false;
         recorder.stop();
@@ -401,10 +414,15 @@
                 Recorder.forceDownload(e)
             })
         });
-        //$('#mic').prop('checked', false);
+        finish = 1000;
         wavesurfer.setPlaybackRate(1);
         wavesurfer.seekTo(0);
-        //scrub.val(0);
+        start = 0;
+        
+        console.log(finish)
+;
+        $( "#slider-range" ).slider('option', { values: [0, finish] })
+
     };
 
 
