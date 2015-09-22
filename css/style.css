@@ -8,27 +8,132 @@ body {
     text-indent: 0px;
     text-shadow: none;
 }
-#canvas-wrapper {
-    height: 100px;
-}
-/* laoding screen */ 
-#loading-screen {
-	height: 100px;
+#sampler-container {
+	position: relative;
+	height: 100%;
 	width: 100%;
-	background: white;
-	color: #f6a828;
-
+}
+#top-box {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 10%;
+	text-align: center;
+}
+#display-wrapper {
+	position: absolute;
+	left: 0;
+	top: 0%;
+	height: 20%;
+	width: 100%;
+	background: transparent;
+	overflow: hidden;
+/*	background: white;
+	color: #f6a828;*/
+}
+#canvas-wrapper {
+    height: 100%;
+    width:100%;
+}
+#welcome-screen {
+	height: 100%;
+	width: 100%;
+}
+#loading-screen {
+	height: 100%;
+	width: 100%;
 }
 
-#scrub {
+
+#slider-range {
+	position: absolute;
+	top: 20%;
+	left: 0;
+	height: 5%;
     width: 100%;
     margin: 0 auto;
 }
+#slider-volume {
+    position: absolute;
+    top: 30%;
+    left: 2%;
+    width: 46%;
+    margin: 0 auto;
+    height: 5%;
+}
+#slider-volume > .ui-slider .ui-slider-handle {
+    position: absolute;
+    z-index: 2;
+    width: 1.2em;
+    height: 123%;
+    cursor: default;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+#slider-pitch {
+	position: absolute;
+	top: 30%;
+	left: 52%;
+	height: 5%;
+    width: 46%;
+    margin: 0 auto;
+}
+#sampler-transport {
+	position: absolute;
+	top: 40%;
+	height: 10%;
+	width: 100%;
+
+}
+#sampler-options {
+	position: absolute;
+	top: 50%;
+	height: 10%;
+	width: 100%;
+	
+}
+#sampler-effects {
+	position: absolute;
+	top: 60%;
+	height: 40%;
+	width: 25%;
+}
+#sampler-delay-box {
+    position: absolute;
+    top: 60%;
+    left: 25%;
+    height: 40%;
+    width: 75%;
+}
+#delay {
+	    position: absolute;
+    width: 100%;
+    height: 33%;
+    top: 50%;
+    left: 50%;
+    margin: 0 auto;
+    transform: translate(-50%, -50%);
+}
+#delaybtn {
+	width: calc(100% - 4px);
+    margin: 2px;
+}
+#sampler-delay-box > span {
+	position:absolute;
+	width: 20%;
+}
 /* vertical sliders */
+#eq {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
 #eq > span {
-    height: 120px;
+    height: 100%;
     float: left;
-    margin: 20px
+    width: calc(20% - 2px);
+    margin: 0;
+
 }
 .ui-slider-pip-label {
     bottom: 20% !important;
@@ -62,35 +167,55 @@ body {
 .ui-slider-vertical.ui-slider-pips .ui-slider-pip {
     text-align: left;
     top: auto;
-    left: 14px;
+    left: 20px;
     margin-left: 0;
     margin-bottom: -0.5em;
+        z-index: 2;
+}
+.ui-slider-vertical .ui-slider-handle {
+    width: 120%;
+    left: -10%;
+    margin-left: 0;
+    margin-bottom: -.6em;
 }
 /* record button */
 
 #record {
-    background: #FF4C4C;
+    border: 1px solid #FF4C4C;
+    /* background: #FF4C4C; */
+    color: #FF4C4C;
 }
 /* toggle btn */
 
 .ck-button {
-    margin: 4px;
+    position: relative;
+    margin: none;
     background-color: #EFEFEF;
     border-radius: 4px;
-    border: 1px solid #D0D0D0;
-    overflow: auto;
+    /* border: 1px solid #D0D0D0; */
+    border: none;
+    overflow: none;
     float: left;
     padding: 7px;
+    width: calc(25% - 4px);
+    margin: 2px;
+    height: 94%;
+
 }
 .ck-button label {
     float: left;
-    width: 4.0em;
+    width: 100%;
+    height: 100%;
 }
 .ck-button label span {
-    text-align: center;
-    display: block;
-    height: 23px;
-    padding-top: 7px;
+        text-align: center;
+    /* display: block; */
+    position: absolute;
+    /* height: 100%; */
+    top: 50%;
+    left: 50%;
+    margin: 0 auto;
+    transform: translate(-50%, -50%);
 }
 .ck-button label input {
     position: absolute;
@@ -103,8 +228,28 @@ body {
 .btnstyle {
     padding: 0;
 }
+.loadlabel {
+    padding: 0;
+
+ }
+#load-text {
+	 position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
 /* load button */
 label input[type="file"] {
     position: fixed;
     top: -1000px;
+}
+input[type="checkbox"] {
+    display: none;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+
+    display: none;
 }

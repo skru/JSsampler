@@ -5,7 +5,7 @@
     var audioContext = new AudioContext();
     var tuna = new Tuna(audioContext);
     var wavesurfer = Object.create(WaveSurfer);
-    var wavesurfHeight = document.getElementById('canvas-wrapper').offsetHeight;
+    var wavesurfHeight = document.getElementById('display-wrapper').offsetHeight;
     var wavesurfer_options = {
         container: document.querySelector('#wave'),
         waveColor: '#f6a828',
@@ -16,7 +16,7 @@
         normalize: false,
         audioContext: audioContext,
         interact: false,
-        height: (100)
+        height: wavesurfHeight
     }
     var looper = $('#looper');
     var mic = $('#mic');
@@ -56,22 +56,16 @@
             delay.delayTime.value = ui.value/100;
         }
 
-    }).slider("pips", {
-        labels: ['Time'],
-        step: 20
     });
 
     $('#delay-feed').slider({
-        value: 50,
+        value: 70,
         range: "min",
         animate: true,
         orientation: "vertical",
         slide: function( event, ui ) {
             delay.feedback.value = ui.value/100;
         }
-    }).slider("pips", {
-        labels: ['Feedback'],
-        step: 20
     });
     $('#delay-cutoff').slider({
         value: 100,
@@ -81,9 +75,6 @@
         slide: function( event, ui ) {
             delay.cutoff.value = (ui.value/100) * 22050;
         }
-    }).slider("pips", {
-        labels: ['Cutoff'],
-        step: 20
     });
     $('#delay-wet').slider({
         value: 100,
@@ -93,9 +84,6 @@
         slide: function( event, ui ) {
             delay.wetLevel.value = ui.value/100;
         }
-    }).slider("pips", {
-        labels: ['Wet'],
-        step: 20
     });
     $('#delay-dry').slider({
         value: 50,
@@ -105,9 +93,6 @@
         slide: function( event, ui ) {
             delay.dryLevel.value = ui.value/100;
         }
-    }).slider("pips", {
-        labels: ['Dry'],
-        step: 20
     });
     delay.feedback.value = $('#delay-time').slider( "option", "value" )/100;
     delay.delayTime.value = $('#delay-feed').slider( "option", "value" )/100;
@@ -118,6 +103,7 @@
 ///////////////////////////////////////////////////////
 ////PLAY
     $("#wave").click(function (e) {
+        console.log('play')
         e.preventDefault();
         if (playing) {
             wavesurfer.seekTo(start);
@@ -141,11 +127,9 @@
 ////STOP
     $("#stop").click(function (e) {
         e.preventDefault();
-        if (playing) {
-            wavesurfer.stop()
-            wavesurfer.seekTo(start / wavesurfer.getDuration());
-            playing = false;
-        } 
+        wavesurfer.stop();
+        wavesurfer.seekTo(start / wavesurfer.getDuration());
+        playing = false;
     });
 ////VOLUME
     $('#slider-volume').slider({
@@ -159,9 +143,6 @@
             masterVolume.gain.value = ui.value/100;
         }
 
-    }).slider("pips", {
-        labels: ['Volume'],
-        step: 100
     });
 ////PITCH
     $('#slider-pitch').slider({
@@ -175,9 +156,6 @@
             wavesurfer.setPlaybackRate(ui.value);
         }
 
-    }).slider("pips", {
-        labels: ['Pitch'],
-        step: 100
     });
 ////RECORD
     $("#record").click(function (e) {
@@ -185,9 +163,11 @@
         recorder.clear();
         recorder.record();
         if (!initial) {
-            console.log(start)
+
             wavesurfer.seekTo(start);
             wavesurfer.play(start,finish  * wavesurfer.getDuration());
+        } else {
+            
         }
 
         //playing = true;
@@ -212,7 +192,7 @@
         } else {
 
         }
-        
+       
 
     });
 ////LOOP BUTTON
@@ -272,38 +252,17 @@
 ////CLEAR
     $("#clear").click(function (e) {
         e.preventDefault();
-        if (playing) {
-            
-        }
         wavesurfer.destroy();
-        wavesurfer.init(wavesurfer_options);  
-        wavesurfer.backend.setFilter();
-        initial = true; // initialise for startRecorder
+        mediaStreamSource.connect(recordVolume); 
+        initial = true;
+        $('#looper').prop('checked', false).trigger("change");
+        //$('#delay').prop('checked', false).trigger("change");
+        $('#micMute').prop('checked', true).trigger("change");
+        $('#micbtn').css('background-color','#f6a828');
+        $('#delaybtn').css('background-color','#EFEFEF');
 
-        //mediaStreamSource.disconnect(masterVolume);
-        //mediaStreamSource.connect(recordVolume); // back to initial state
 
-        wavesurfer.backend.setFilter(masterMerger); 
-        //masterMerger.disconnect(splitter);
-        splitter.disconnect(masterVolume);
-        masterVolume.disconnect(audioContext.destination);
-        splitter.disconnect(recordVolume);
-
-        mediaStreamSource.connect(masterMerger);// hack: allows for stopRecord to disconnect
-        mediaStreamSource.connect(recordVolume);
-        wavesurfer.init(wavesurfer_options);
-
-        
-
-        wavesurfer.setVolume(0); //mutes ac.destination
-        masterVolume.gain.value = 5; //maintains equal volume when recording?
-
-        $('#mic').prop('checked', false).trigger("change");
-
-        // wavesurfer.seekTo(0);
-        // wavesurfer.setVolume(0);
-        // masterVolume.gain.value = 5;
-        
+///DELAY CHECKBOX        
     });
     $('#delay').prop('checked', false);
     $('#delay:checkbox').change(function (e) {
@@ -335,9 +294,6 @@
                 wavesurfer.seekTo(ui.values[0] / 1000.0);
             }
         }
-    }).slider("pips", {
-        labels: ['Loop'],
-        step: 100
     });
 
 //// Load  
@@ -349,21 +305,24 @@
                 mediaStreamSource.disconnect(recordVolume); // set in onSucces
                 mediaStreamSource.connect(masterMerger);// to allow mic change event
                 $('#mic').prop('checked', false).trigger("change");
-                
+                console.log('empty')
             } else {
                 wavesurfer.destroy(); // clear wavesurfer
+                 console.log('not empty')
             }
             wavesurfer.init(wavesurfer_options);         
             wavesurfer.loadBlob(file); // load file into wavesurfer
             wavesurfer.backend.setFilter(masterMerger); 
             wavesurfer.setVolume(0); //mutes ac.destination
-            masterVolume.gain.value = 5; //maintains equal volume when recording?
+            masterVolume.gain.value = 1; //maintains equal volume when recording?
             initial = false;
 
             masterMerger.connect(splitter);
             splitter.connect(masterVolume);
             masterVolume.connect(audioContext.destination);
-            splitter.connect(recordVolume);    
+            splitter.connect(recordVolume);   
+
+
         }
       reader.readAsDataURL(file);
 
@@ -371,11 +330,13 @@
 //// loading screen
     wavesurfer.on('loading', function (callback) {
         $('#canvas-wrapper').css('height','0');// hack: wavesurfer dissapears with .hide()
+        $("#welcome-screen").hide()
         $("#loading-screen").show();
         $("#loading-screen").append(callback + '%')
         wavesurfer.on('ready', function (callback) {
             $("#loading-screen").hide()
-            $('#canvas-wrapper').css('height','100px');
+            $('#canvas-wrapper').css('height','100%')
+
         });
     });
 
@@ -393,7 +354,7 @@
         playing = false;
         recorder.stop();
         if (initial === true) {
-            mediaStreamSource.disconnect(recordVolume);
+            //mediaStreamSource.disconnect(recordVolume);
             mediaStreamSource.connect(masterMerger);// hack: allows for stopRecord to disconnect
             wavesurfer.init(wavesurfer_options);
 
@@ -406,6 +367,7 @@
             wavesurfer.setVolume(0); //mutes ac.destination
             masterVolume.gain.value = 5; //maintains equal volume when recording?
         } 
+        mediaStreamSource.connect(masterMerger);
         initial = false;
         recorder.exportWAV(function (e) {
             wavesurfer.loadBlob(e);
@@ -415,13 +377,17 @@
             })
         });
         finish = 1000;
+        $("#slider-pitch").slider('value',1);
         wavesurfer.setPlaybackRate(1);
+        //$("#slider-pitch").slider('value',1);
         wavesurfer.seekTo(0);
         start = 0;
-        
-        console.log(finish)
-;
+        $('#mic').prop('checked', false).trigger("change");
         $( "#slider-range" ).slider('option', { values: [0, finish] })
+        if ($('#delay').is(':checked')) {
+            $('#delay').prop('checked', false).trigger("change");
+        }
+
 
     };
 

@@ -1,97 +1,117 @@
 <html>
-	<head>
 
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<title>JS sampler</title>
-		<link href='css/jquery-ui.min.css' rel="stylesheet">
-		<link href='css/jquery-ui-slider-pips.css' rel="stylesheet">
-		<link href='css/style.css' rel="stylesheet">
+<head>
 
-	</head>
-	<body>
-		<div id='loading-screen' style='display:none;'><h1>loading: </h1></div>
-	    
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>JS sampler</title>
+    <link href='css/jquery-ui.min.css' rel="stylesheet">
+    <link href='css/jquery-ui-slider-pips.css' rel="stylesheet">
+    <link href='css/style.css' rel="stylesheet">
 
-		<div id='canvas-wrapper'>
-	        <div id='wave'></div>
+</head>
+
+<body>
+    <div id='sampler-container'>
+
+
+        <div id='display-wrapper'>
+            <div class='display-box' id='loading-screen' style='display:none;'>
+                <h1>loading: </h1>
+            </div>
+            <div class='display-box' id='welcome-screen'>
+                <h1>Hit RECORD or LOAD a sound file.</h1>
+            </div>
+
+
+            <div id='canvas-wrapper'>
+                <div id='wave'></div>
+            </div>
+        </div>
+
+ 
+        <div id="slider-range"></div>
+     
+        <div id="slider-volume"></div>
+    
+        <div id="slider-pitch"></div>
+    
+
+        <div id='sampler-transport'>
+        	<button class="ck-button" id='record'>RECORD</button>
+	        <button class="ck-button" id='recording' style='display:none;'>STOPREC</button>
+	        <button class="ck-button" id='stop'>STOP</button>
+	        <div class="ck-button btnstyle" id='looperbtn'>
+	            <label>
+	                <input type="checkbox" value="0" id='looper'><span>LOOP</span>
+	            </label>
+	        </div>
+
+
+
+	        <div class="ck-button btnstyle" id='micbtn'>
+	            <label>
+	                <input type="checkbox" id='mic'><span>MIC</span>
+	            </label>
+	        </div>	        
+        </div>
+
+        <div id='sampler-options'>
+        	<button class="ck-button" id='save'>SAVE</button>
+
+	        <label class="ck-button loadlabel">
+	            <input type="file" id="load" />
+	            <span id='load-text'>LOAD</span>
+	        </label>
+
+	        <button class="ck-button" id='clear'>CLEAR</button>
+
+	        <div class="ck-button btnstyle" id='micMutebtn'>
+	            <label>
+	                <input type="checkbox" id='micMute'><span>M/Mute</span>
+	            </label>
+	        </div>
 	    </div>
 
-		<br>
-		<div id="slider-range"></div>
-		<br>
-		<div id="slider-volume"></div>
-		<br>
-	    <div id="slider-pitch"></div>
-		<br>
 
-		<button class="ck-button" id='record'>RECORD</button>
-		<button class="ck-button" id='recording'>STOPREC</button>
-		<button class="ck-button" id='stop'>STOP</button>
-		<div class="ck-button btnstyle" id='looperbtn'>
-		   <label>
-		      <input type="checkbox" value="0" id='looper'><span>LOOP</span>
-		   </label>
-		</div>
-		
-		
-		
-		<div class="ck-button btnstyle" id='micbtn'>
-		   <label>
-		      <input type="checkbox" id='mic'><span>MIC</span>
-		   </label>
-		</div>
-		<div class="ck-button btnstyle" id='micMutebtn'>
-		   <label>
-		      <input type="checkbox" id='micMute'><span>M/Mute</span>
-		   </label>
-		</div>
+	    <div id='sampler-effects'>
+	    	<div class="ck-button btnstyle" id='delaybtn'>
+	            <label>
+	                <input type="checkbox" id='delay'><span>DELAY</span>
+	            </label>
+	        </div>
+        </div>
+        <div id='sampler-delay-box'>
+        	<span>time</span>
+        	<span>feed</span>
+        	<span>cutoff</span>
+        	<span>wet</span>
+        	<span>dry</span>
+        	<div id="eq">
+	            <span id='delay-time'></span>
+	            <span id='delay-feed'></span>
+	            <span id='delay-cutoff'></span>
+	            <span id='delay-wet'></span>
+	            <span id='delay-dry'></span>
+	        </div>
+        </div>
 
-		<button class="ck-button" id='save'>SAVE</button>
-		
-		<label class="ck-button loadlabel">
-	    <input type="file" id="load"/>
-		<span>LOAD</span>
-		</label>
-
-		<button class="ck-button" id='clear'>CLEAR</button>
-
-	    <div style='float:left;'>
-	    <div class="ck-button btnstyle" id='delaybtn'>
-		   <label>
-		      <input type="checkbox" id='delay'><span>DELAY</span>
-		   </label>
-		</div>
-	    	
+    </div>
+	<script src='js/jquery-2.1.4.min.js'></script>
+	<script src="js/jquery-ui.min.js"></script>
+    <script src="js/recorder.js"></script>
+    <script src='js/src/wavesurfer.js'></script>
+    <script src='js/src/util.js'></script>
+    <script src='js/src/webaudio.js'></script>
+    <script src='js/src/mediaelement.js'></script>
+    <script src='js/src/drawer.js'></script>
+    <script src='js/src/drawer.canvas.js'></script>
 
 
-            <div id="eq">
-			  <span id='delay-time'></span>
-			  <span id='delay-feed'></span>
-			  <span id='delay-cutoff'></span>
-			  <span id='delay-wet'></span>
-			  <span id='delay-dry'></span>
-			</div>
-		</div>
 
 
-		<script src='js/jquery-2.1.4.min.js'></script>
-		<script src="js/jquery-ui.min.js"></script>
-		<script src="js/jquery-ui-slider-pips.js"></script>
+    <!--<script src='js/wavesurfer.min.js'></script>-->
+    <script src="js/tuna.js"></script>
+    <script src='js/main.js'></script>
+</body>
 
-
-		<script src="js/recorder.js"></script>
-		<script src='js/src/wavesurfer.js'></script>
-		<script src='js/src/util.js'></script>
-		<script src='js/src/webaudio.js'></script>
-		<script src='js/src/mediaelement.js'></script>
-		<script src='js/src/drawer.js'></script>
-		<script src='js/src/drawer.canvas.js'></script>
-		
-		
-		
-		
-		<!--<script src='js/wavesurfer.min.js'></script>-->
-		<script src="js/tuna.js"></script>
-		<script src='js/main.js'></script>
-	</body>
 </html>
