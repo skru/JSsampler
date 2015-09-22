@@ -19,7 +19,8 @@
                 <h1>loading: </h1>
             </div>
             <div class='display-box' id='welcome-screen'>
-                <h1>Hit RECORD or LOAD a sound file.</h1>
+                <h1>OverDubSampler</h1>
+                <p>Caution!. Can produce VERY LOUD sounds. Do not Use M/Mute unless using headphones.</p>
             </div>
 
 
@@ -39,9 +40,9 @@
         <div id='sampler-transport'>
         	<button class="ck-button" id='record'>RECORD</button>
 	        <button class="ck-button" id='recording' style='display:none;'>STOPREC</button>
-	        <button class="ck-button" id='stop'>STOP</button>
+	        <button class="ck-button" id='stop' disabled>STOP</button>
 	        <div class="ck-button btnstyle" id='looperbtn'>
-	            <label>
+	            <label disabled>
 	                <input type="checkbox" value="0" id='looper'><span>LOOP</span>
 	            </label>
 	        </div>
@@ -63,7 +64,7 @@
 	            <span id='load-text'>LOAD</span>
 	        </label>
 
-	        <button class="ck-button" id='clear'>CLEAR</button>
+	        <button class="ck-button" id='clear' disabled>CLEAR</button>
 
 	        <div class="ck-button btnstyle" id='micMutebtn'>
 	            <label>
@@ -81,11 +82,13 @@
 	        </div>
         </div>
         <div id='sampler-delay-box'>
-        	<span>time</span>
-        	<span>feed</span>
-        	<span>cutoff</span>
-        	<span>wet</span>
-        	<span>dry</span>
+        	<div id='delay-tags'>
+        		<div><span>time</span></div>
+	        	<div><span>feed</span></div>
+	        	<div><span>cutoff</span></div>
+	        	<div><span>wet</span></div>
+	        	<div><span>dry</span></div>
+        	</div>
         	<div id="eq">
 	            <span id='delay-time'></span>
 	            <span id='delay-feed'></span>

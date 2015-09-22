@@ -43,6 +43,10 @@
     var playing = false;           //keeps track of playing state
     var recording = false; //keeps track of recording state
 
+////disable options on init
+    $('#slider-volume').slider({ disabled: true })
+
+
 ///////////////////////////////////////////////////////////
 ///////////// DELAY ///////////////////////////////////////
     var de = ['killer']
@@ -219,6 +223,7 @@
     });
 ////MICROPHONE
     mic.prop('checked', true);
+
     $('#micbtn').css('background-color','#f6a828');
     mic.change(function (e) {
         e.preventDefault();
@@ -260,6 +265,8 @@
         $('#micMute').prop('checked', true).trigger("change");
         $('#micbtn').css('background-color','#f6a828');
         $('#delaybtn').css('background-color','#EFEFEF');
+        $('#clear').prop('disabled', true);
+        $('#stop').prop('disabled', true);
 
 
 ///DELAY CHECKBOX        
@@ -387,6 +394,11 @@
         if ($('#delay').is(':checked')) {
             $('#delay').prop('checked', false).trigger("change");
         }
+
+        $('#clear').prop('disabled', false);
+        $('#stop').prop('disabled', false);
+        
+
 
 
     };
