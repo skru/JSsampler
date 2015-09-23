@@ -267,6 +267,7 @@
         $('#delaybtn').css('background-color','#EFEFEF');
         $('#clear').prop('disabled', true);
         $('#stop').prop('disabled', true);
+        $('#welcome-screen').show()
 
 
 ///DELAY CHECKBOX        
@@ -327,7 +328,9 @@
             masterMerger.connect(splitter);
             splitter.connect(masterVolume);
             masterVolume.connect(audioContext.destination);
-            splitter.connect(recordVolume);   
+            splitter.connect(recordVolume); 
+
+            $("#welcome-screen").hide()  
 
 
         }
@@ -361,7 +364,7 @@
         playing = false;
         recorder.stop();
         if (initial === true) {
-            //mediaStreamSource.disconnect(recordVolume);
+            mediaStreamSource.disconnect(recordVolume);
             mediaStreamSource.connect(masterMerger);// hack: allows for stopRecord to disconnect
             wavesurfer.init(wavesurfer_options);
 
@@ -397,6 +400,7 @@
 
         $('#clear').prop('disabled', false);
         $('#stop').prop('disabled', false);
+        $("#welcome-screen").hide();
         
 
 
